@@ -1,0 +1,13 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Text;
+
+namespace CommsSender.Domain.Enums
+{
+    public enum MessageStatus
+    {
+        Pending = 0,
+        Sent = 1,
+        Failed = 2
+    }
+}
