@@ -3,6 +3,7 @@
     public enum EnvironmentalSettingEnum
     {
         HangfireUsername,
-        HangfirePassword
+        HangfirePassword,
+        TelegramBotApiKey
     }
 }

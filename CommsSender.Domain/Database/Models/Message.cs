@@ -1,4 +1,5 @@
 ﻿using CommsSender.Domain.Enums;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
@@ -29,12 +30,15 @@ namespace CommsSender.Domain.Database.Models
         [Required]
         public MessageType MessageType { get; set; }
 
-        public string? TelegramChatId { get; set; }
+        public long? TelegramChatId { get; set; }
 
         [Required]
         public MessageStatus Status { get; set; }
 
         [Required]
         public int MessageSentAttempts { get; set; } = 0;
+
+        [DeleteBehavior(DeleteBehavior.Cascade)]
+        public virtual ICollection<MessageErrorLog> ErrorLogs { get; set; } = null!;
     }
 }

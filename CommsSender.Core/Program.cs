@@ -2,7 +2,9 @@ using CommsSender.Core.Middleware;
 using CommsSender.Domain.Database.Context;
 using CommsSender.Domain.Enums;
 using CommsSender.Domain.Helpers;
+using CommsSender.Domain.Interfaces.Api;
 using CommsSender.Domain.Interfaces.Helpers;
+using CommsSender.Domain.Services;
 using Hangfire;
 using Hangfire.Dashboard;
 using Hangfire.Dashboard.BasicAuthorization;
@@ -31,6 +33,9 @@ builder.Services.AddHttpContextAccessor();
 
 // Add in our own services
 builder.Services.AddSingleton<IEnvironmentalSettingHelper, EnvironmentalSettingHelper>();
+builder.Services.AddHttpClient<IExpoPushNotificationHelper, ExpoPushNotificationHelper>();
+builder.Services.AddScoped<IMessageService, MessageService>();
+builder.Services.AddScoped<IPushNotificationService, PushNotificationService>();
 
 // Add in the auth
 builder.Services.AddAuthorization();
@@ -106,7 +111,6 @@ builder.Services.AddHangfire(configuration => configuration
 
 // hangfire
 builder.Services.AddHangfireServer(options => options.SchedulePollingInterval = TimeSpan.FromSeconds(10));
-
 
 var app = builder.Build();
 
