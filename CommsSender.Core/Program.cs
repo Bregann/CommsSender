@@ -1,3 +1,4 @@
+using CommsSender.Core.Middleware;
 using CommsSender.Domain.Database.Context;
 using CommsSender.Domain.Enums;
 using CommsSender.Domain.Helpers;
@@ -64,7 +65,7 @@ GlobalConfiguration.Configuration.UseMemoryStorage();
 
 var postgresContainer = new PostgreSqlBuilder()
     .WithImage("postgres:15-alpine")
-    .WithDatabase("butterydb")
+    .WithDatabase("commssender")
     .WithUsername("testuser")
     .WithPassword("testpass")
     .WithPortBinding(5432, true)
@@ -111,6 +112,8 @@ var app = builder.Build();
 
 app.UseCors("AllowAll");
 
+// Add API Key middleware before other middleware
+app.UseMiddleware<ApiKeyMiddleware>();
 
 #if DEBUG
 // Seed the database
