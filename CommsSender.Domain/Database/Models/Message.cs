@@ -38,6 +38,8 @@ namespace CommsSender.Domain.Database.Models
         [Required]
         public int MessageSentAttempts { get; set; } = 0;
 
+        public bool? PushNotificationDelivered { get; set; } = null;
+
         [DeleteBehavior(DeleteBehavior.Cascade)]
         public virtual ICollection<MessageErrorLog> ErrorLogs { get; set; } = null!;
     }

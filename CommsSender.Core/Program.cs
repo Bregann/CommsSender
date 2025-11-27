@@ -39,20 +39,6 @@ builder.Services.AddScoped<IPushNotificationService, PushNotificationService>();
 
 // Add in the auth
 builder.Services.AddAuthorization();
-builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
-    .AddJwtBearer(options =>
-    {
-        options.TokenValidationParameters = new TokenValidationParameters
-        {
-            ValidateIssuer = true,
-            ValidateAudience = true,
-            ValidateLifetime = true,
-            ValidateIssuerSigningKey = true,
-            ValidIssuer = Environment.GetEnvironmentVariable("JwtValidIssuer"),
-            ValidAudience = Environment.GetEnvironmentVariable("JwtValidAudience"),
-            IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(Environment.GetEnvironmentVariable("JwtKey")!))
-        };
-    });
 
 builder.Services.AddCors(options =>
 {
@@ -169,5 +155,16 @@ app.MapHangfireDashboard("/hangfire", new DashboardOptions
 {
     Authorization = auth
 }, JobStorage.Current);
+
+// Register recurring Hangfire jobs
+RecurringJob.AddOrUpdate<IMessageService>(
+    "process-pending-messages",
+    service => service.ProcessPendingMessages(),
+    "*/20 * * * * *");
+
+RecurringJob.AddOrUpdate<IMessageService>(
+    "validate-push-notifications",
+    service => service.ValidatePushNotificationsSent(),
+    "* * * * *");
 
 app.Run();

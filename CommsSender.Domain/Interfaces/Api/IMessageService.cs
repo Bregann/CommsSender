@@ -10,5 +10,6 @@ namespace CommsSender.Domain.Interfaces.Api
         Task ProcessPendingMessages();
         Task QueuePushNotification(QueuePushNotificationRequest message);
         Task QueueTelegramMessage(QueueTelegramMessageRequest message);
+        Task ValidatePushNotificationsSent();
     }
 }

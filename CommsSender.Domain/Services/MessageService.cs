@@ -42,7 +42,8 @@ namespace CommsSender.Domain.Services
                 MessageTitle = message.Title,
                 Content = message.Body,
                 Status = MessageStatus.Pending,
-                CreatedAt = DateTime.UtcNow
+                CreatedAt = DateTime.UtcNow,
+                PushNotificationDelivered = false
             });
 
             await context.SaveChangesAsync();
@@ -74,7 +75,22 @@ namespace CommsSender.Domain.Services
                         break;
                 }
             }
+        }
 
+        public async Task ValidatePushNotificationsSent()
+        {
+            var sentPushMessages = await context.Messages
+                .Where(m => m.MessageType == MessageType.PushNotification && m.Status == MessageStatus.Sent && m.PushNotificationDelivered == false)
+                .ToListAsync();
+
+            foreach (var message in sentPushMessages)
+            {
+                //TODO: implement real validation with Expo service
+
+                message.PushNotificationDelivered = true;
+                await context.SaveChangesAsync();
+                Log.Information($"Validated Push Notification message id {message.Id} as delivered");
+            }
         }
 
         private async Task SendTelegramMessage(Message message)
@@ -124,11 +140,62 @@ namespace CommsSender.Domain.Services
 
         private async Task SendPushNotification(Message message, string pushToken)
         {
-            await expoPushNotificationHelper.SendPushNotification(
+            var res = await expoPushNotificationHelper.SendPushNotification(
                 expoPushToken: pushToken,
                 title: message.MessageTitle ?? string.Empty,
                 body: message.Content
             );
+
+            if (res == null)
+            {
+                Log.Error($"Error sending Push Notification message id {message.Id}: No response from Expo service");
+
+                message.MessageSentAttempts += 1;
+
+                if (message.MessageSentAttempts >= _retryLimit)
+                {
+                    message.Status = MessageStatus.Failed;
+                }
+
+                await context.MessageErrorLogs.AddAsync(new MessageErrorLog
+                {
+                    MessageId = message.Id,
+                    ErrorMessage = "No response from Expo service",
+                    CreatedAt = DateTime.UtcNow
+                });
+
+                await context.SaveChangesAsync();
+                return;
+            }
+
+            if (res.Errors != null && res.Errors.Count > 0)
+            {
+                var errorMessages = new StringBuilder();
+
+                foreach (var error in res.Errors)
+                {
+                    errorMessages.AppendLine(error.Message);
+                }
+
+                Log.Error($"Error sending Push Notification message id {message.Id}: {errorMessages}");
+
+                message.MessageSentAttempts += 1;
+
+                if (message.MessageSentAttempts >= _retryLimit)
+                {
+                    message.Status = MessageStatus.Failed;
+                }
+
+                await context.MessageErrorLogs.AddAsync(new MessageErrorLog
+                {
+                    MessageId = message.Id,
+                    ErrorMessage = errorMessages.ToString(),
+                    CreatedAt = DateTime.UtcNow
+                });
+
+                await context.SaveChangesAsync();
+                return;
+            }
 
             message.Status = MessageStatus.Sent;
             message.SentAt = DateTime.UtcNow;
