@@ -2,9 +2,6 @@
 using CommsSender.Domain.Database.Models;
 using CommsSender.Domain.Interfaces.Helpers;
 using Serilog;
-using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace CommsSender.Domain.Services
 {

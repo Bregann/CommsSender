@@ -1,5 +1,4 @@
-﻿using CommsSender.Domain.Data.Database.Models;
-using CommsSender.Domain.Database.Context;
+﻿using CommsSender.Domain.Database.Context;
 using CommsSender.Domain.Database.Models;
 using CommsSender.Domain.Interfaces.Helpers;
 

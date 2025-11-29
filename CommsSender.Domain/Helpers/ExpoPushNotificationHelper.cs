@@ -1,13 +1,6 @@
 ﻿using CommsSender.Domain.DTOs.Expo;
 using CommsSender.Domain.Interfaces.Helpers;
-using System;
-using System.Collections.Generic;
-using System.Net.Http;
 using System.Net.Http.Json;
-using System.Text;
-using System.Text.Json;
-using System.Text.Json.Serialization;
-using System.Threading.Tasks;
 
 namespace CommsSender.Domain.Helpers
 {
@@ -16,9 +9,9 @@ namespace CommsSender.Domain.Helpers
         private const string ExpoApiUrl = "https://exp.host/--/api/v2/push/send";
 
         public async Task<ExpoPushTicketResponse> SendPushNotification(
-            string expoPushToken, 
-            string title, 
-            string body, 
+            string expoPushToken,
+            string title,
+            string body,
             object? data = null,
             string? channelId = null)
         {

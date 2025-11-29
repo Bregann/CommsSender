@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace CommsSender.Domain.DTOs.Messages
+﻿namespace CommsSender.Domain.DTOs.Messages
 {
     public class QueueTelegramMessageRequest
     {

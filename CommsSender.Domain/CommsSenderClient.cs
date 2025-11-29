@@ -16,7 +16,7 @@ namespace CommsSender.Domain
     public class CommsSenderClient(HttpClient httpClient, IEnvironmentalSettingHelper environmentalSettingHelper) : ICommsSenderClient
     {
         private readonly string _baseAddress = "http://192.168.1.xxx";
-        private readonly string _apiKey = environmentalSettingHelper.TryGetEnviromentalSettingValue(EnvironmentalSettingEnum.CommsSenderApiKey) 
+        private readonly string _apiKey = environmentalSettingHelper.TryGetEnviromentalSettingValue(EnvironmentalSettingEnum.CommsSenderApiKey)
             ?? throw new Exception("CommsSender API Key not configured");
 
         public async Task<bool> SendTelegramMessage(long chatId, string messageText)

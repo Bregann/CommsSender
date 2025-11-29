@@ -6,8 +6,6 @@ using CommsSender.Domain.Interfaces.Api;
 using CommsSender.Domain.Interfaces.Helpers;
 using Microsoft.EntityFrameworkCore;
 using Serilog;
-using System;
-using System.Collections.Generic;
 using System.Text;
 using Telegram.Bot;
 

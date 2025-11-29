@@ -6,15 +6,11 @@ using CommsSender.Domain.Interfaces.Api;
 using CommsSender.Domain.Interfaces.Helpers;
 using CommsSender.Domain.Services;
 using Hangfire;
-using Hangfire.Dashboard;
 using Hangfire.Dashboard.BasicAuthorization;
 using Hangfire.MemoryStorage;
 using Hangfire.PostgreSql;
-using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.IdentityModel.Tokens;
 using Serilog;
-using System.Text;
 using Testcontainers.PostgreSql;
 
 Log.Logger = new LoggerConfiguration().WriteTo.Async(x => x.File("/app/Logs/log.log", retainedFileCountLimit: 7, rollingInterval: RollingInterval.Day)).WriteTo.Console().CreateLogger();
@@ -49,7 +45,6 @@ builder.Services.AddCors(options =>
               .AllowAnyHeader();
     });
 });
-
 
 #if DEBUG
 GlobalConfiguration.Configuration.UseMemoryStorage();

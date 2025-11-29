@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "147780257560",
+    "project_id": "comms-sender",
+    "storage_bucket": "comms-sender.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:147780257560:android:ca8488af3935fd57aa006d",
+        "android_client_info": {
+          "package_name": "com.bregan.commssender"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCCN7Cw9FsbezN4rzLDwbyD7do7HmCZ9bA"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

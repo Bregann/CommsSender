@@ -1,6 +1,5 @@
 ﻿using CommsSender.Domain.DTOs.Messages;
 using CommsSender.Domain.Interfaces.Api;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
 namespace CommsSender.Core.Controllers

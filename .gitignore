@@ -367,3 +367,4 @@ MigrationBackup/
 # Fody - auto-generated XML schema
 FodyWeavers.xsd
 /BreganTwitchbot.Infrastructure/Database/DbSettings.cs
+comms-sender/comms-sender-firebase-adminsdk-fbsvc-ee26a4029e.json

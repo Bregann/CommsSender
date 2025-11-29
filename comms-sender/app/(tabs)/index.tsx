@@ -20,8 +20,8 @@ export default function HomeScreen() {
   const [notificationCount, setNotificationCount] = useState(0);
   const [registrationStatus, setRegistrationStatus] = useState<string>('Not registered');
   const [lastNotification, setLastNotification] = useState<string>('None');
-  const notificationListener = useRef<Notifications.Subscription | null>(null);
-  const responseListener = useRef<Notifications.Subscription | null>(null);
+  const notificationListener = useRef<Notifications.EventSubscription | null>(null);
+  const responseListener = useRef<Notifications.EventSubscription | null>(null);
 
   async function registerForPushNotificationsAsync() {
     let token;
@@ -48,7 +48,11 @@ export default function HomeScreen() {
       }
       
       try {
-        const projectId = Constants.expoConfig?.extra?.eas?.projectId;
+        const projectId = Constants?.expoConfig?.extra?.eas?.projectId ?? Constants?.easConfig?.projectId;
+        if (!projectId) {
+          Alert.alert('Error', 'Project ID not found');
+          return;
+        }
         token = (await Notifications.getExpoPushTokenAsync({ projectId })).data;
       } catch (error) {
         Alert.alert('Error', `Failed to get push token: ${error}`);

@@ -1,5 +1,4 @@
 ﻿using CommsSender.Domain.Interfaces.Helpers;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
 namespace CommsSender.Core.Controllers
