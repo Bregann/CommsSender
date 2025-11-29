@@ -57,7 +57,7 @@ var postgresContainer = new PostgreSqlBuilder()
     .WithDatabase("commssender")
     .WithUsername("testuser")
     .WithPassword("testpass")
-    .WithPortBinding(5432, true)
+    .WithPortBinding(5432, 5432)
     .Build();
 
 await postgresContainer.StartAsync();

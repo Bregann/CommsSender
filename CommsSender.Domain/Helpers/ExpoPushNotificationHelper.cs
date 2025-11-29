@@ -1,42 +1,52 @@
 ﻿using CommsSender.Domain.DTOs.Expo;
 using CommsSender.Domain.Interfaces.Helpers;
 using System.Net.Http.Json;
+using System.Text.Json;
+using System.Text.Json.Serialization;
 
 namespace CommsSender.Domain.Helpers
 {
     public class ExpoPushNotificationHelper(HttpClient httpClient) : IExpoPushNotificationHelper
     {
         private const string ExpoApiUrl = "https://exp.host/--/api/v2/push/send";
+        private static readonly JsonSerializerOptions JsonOptions = new()
+        {
+            PropertyNamingPolicy = JsonNamingPolicy.CamelCase,
+            DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull,
+            WriteIndented = false
+        };
 
         public async Task<ExpoPushTicketResponse> SendPushNotification(
             string expoPushToken,
             string title,
-            string body,
-            object? data = null,
-            string? channelId = null)
+            string body)
         {
-            var message = new ExpoPushMessage
+            var messages = new[]
             {
-                To = expoPushToken,
-                Title = title,
-                Body = body,
-                Data = data,
-                ChannelId = channelId,
-                Priority = ExpoPriority.High
+                new ExpoPushMessage
+                {
+                    To = expoPushToken,
+                    Title = title,
+                    Body = body
+                }
             };
 
             var request = new HttpRequestMessage(HttpMethod.Post, ExpoApiUrl)
             {
-                Content = JsonContent.Create(message)
+                Content = new StringContent(
+                    JsonSerializer.Serialize(messages, JsonOptions),
+                    System.Text.Encoding.UTF8,
+                    "application/json")
             };
-
-            request.Headers.Accept.Add(new System.Net.Http.Headers.MediaTypeWithQualityHeaderValue("application/json"));
 
             var response = await httpClient.SendAsync(request);
             response.EnsureSuccessStatusCode();
+            
+            var result = await response.Content.ReadAsStreamAsync();
+            var ticket = await JsonSerializer.DeserializeAsync<ExpoPushTicketResponse>(result, JsonOptions)
+                ?? throw new InvalidOperationException("Failed to deserialize response");
 
-            var result = await response.Content.ReadFromJsonAsync<ExpoPushTicketResponse>();
-            return result ?? throw new InvalidOperationException("Failed to deserialize response");
+            return ticket;
         }
 
         public async Task<ExpoPushReceiptResponse> GetPushReceipts(List<string> receiptIds)

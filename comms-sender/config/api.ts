@@ -1,6 +1,6 @@
 import Constants from 'expo-constants';
 
-const API_BASE_URL = 'https://commsapi.bregan.me';
+const API_BASE_URL = 'https://commssenderapi.bregan.me/api';
 
 // Get API key from environment variable
 // In Expo, use EXPO_PUBLIC_ prefix for variables that should be available in the app
