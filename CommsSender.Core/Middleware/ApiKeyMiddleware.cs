@@ -16,8 +16,7 @@ namespace CommsSender.Core.Middleware
                 return;
             }
 
-            var configuration = context.RequestServices.GetRequiredService<IConfiguration>();
-            var apiKey = configuration["CommsSenderApiKey"];
+            var apiKey = Environment.GetEnvironmentVariable("CommsSenderApiKey");
 
             if (apiKey is null || !apiKey.Equals(extractedApiKey))
             {
