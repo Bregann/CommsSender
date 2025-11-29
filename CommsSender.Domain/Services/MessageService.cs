@@ -55,6 +55,11 @@ namespace CommsSender.Domain.Services
                 .Take(_batchSize)
                 .ToListAsync();
 
+            if (pendingMessages.Count == 0)
+            {
+                return;
+            }
+
             // get the latest push token
             var token = await context.PushTokens
                 .OrderByDescending(t => t.CreatedAt)
@@ -80,6 +85,11 @@ namespace CommsSender.Domain.Services
             var sentPushMessages = await context.Messages
                 .Where(m => m.MessageType == MessageType.PushNotification && m.Status == MessageStatus.Sent && m.PushNotificationDelivered == false)
                 .ToListAsync();
+
+            if (sentPushMessages.Count == 0)
+            {
+                return;
+            }
 
             foreach (var message in sentPushMessages)
             {
