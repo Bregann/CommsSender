@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using System.Text.Json.Serialization;
+﻿using System.Text.Json.Serialization;
 
 namespace CommsSender.Domain.DTOs.Expo
 {
@@ -41,7 +38,7 @@ namespace CommsSender.Domain.DTOs.Expo
         /// The delivery priority of the message (default, normal, or high)
         /// </summary>
         [JsonPropertyName("priority")]
-        [JsonConverter(typeof(JsonStringEnumConverter)]
+        [JsonConverter(typeof(JsonStringEnumConverter))]
         public ExpoPriority? Priority { get; set; }
 
         /// <summary>
