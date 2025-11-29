@@ -1,5 +1,4 @@
 ﻿using CommsSender.Domain.Enums;
-using Microsoft.EntityFrameworkCore;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
@@ -37,7 +36,6 @@ namespace CommsSender.Domain.Database.Models
 
         public bool? PushNotificationDelivered { get; set; } = null;
 
-        [DeleteBehavior(DeleteBehavior.Cascade)]
         public virtual ICollection<MessageErrorLog> ErrorLogs { get; set; } = null!;
     }
 }

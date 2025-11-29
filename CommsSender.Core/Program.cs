@@ -7,11 +7,14 @@ using CommsSender.Domain.Interfaces.Helpers;
 using CommsSender.Domain.Services;
 using Hangfire;
 using Hangfire.Dashboard.BasicAuthorization;
-using Hangfire.MemoryStorage;
 using Hangfire.PostgreSql;
 using Microsoft.EntityFrameworkCore;
 using Serilog;
+
+#if DEBUG
+using Hangfire.MemoryStorage;
 using Testcontainers.PostgreSql;
+#endif
 
 Log.Logger = new LoggerConfiguration().WriteTo.Async(x => x.File("/app/Logs/log.log", retainedFileCountLimit: 7, rollingInterval: RollingInterval.Day)).WriteTo.Console().CreateLogger();
 Log.Information("Logger Setup");
@@ -77,15 +80,15 @@ builder.Services.AddHangfire(configuration => configuration
 #else
 builder.Services.AddDbContext<AppDbContext>(options =>
     options.UseLazyLoadingProxies()
-           .UseNpgsql(Environment.GetEnvironmentVariable("xxxConnStringLive")));
+           .UseNpgsql(Environment.GetEnvironmentVariable("CommsSenderConnStringLive")));
 
-GlobalConfiguration.Configuration.UsePostgreSqlStorage(c => c.UseNpgsqlConnection(Environment.GetEnvironmentVariable("xxxConnString")));
+GlobalConfiguration.Configuration.UsePostgreSqlStorage(c => c.UseNpgsqlConnection(Environment.GetEnvironmentVariable("CommsSenderConnStringLive")));
 
 builder.Services.AddHangfire(configuration => configuration
         .SetDataCompatibilityLevel(CompatibilityLevel.Version_180)
         .UseSimpleAssemblyNameTypeSerializer()
         .UseRecommendedSerializerSettings()
-        .UsePostgreSqlStorage(c => c.UseNpgsqlConnection(Environment.GetEnvironmentVariable("xxxConnString")))
+        .UsePostgreSqlStorage(c => c.UseNpgsqlConnection(Environment.GetEnvironmentVariable("CommsSenderConnStringLive")))
         );
 
 #endif
