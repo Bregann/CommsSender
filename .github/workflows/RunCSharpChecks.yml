@@ -1,0 +1,37 @@
+name: Run C# formatting
+
+on:
+  pull_request:
+    branches:
+      - main
+    paths:
+      - "CommsSender.Domain/**"
+      - "CommsSender.Core/**"
+      - "CommsSender.sln"
+
+  push:
+    branches:
+      - main
+    paths:
+      - "CommsSender.Domain/**"
+      - "CommsSender.Core/**"
+      - "CommsSender.sln"
+
+jobs:
+  format-csharp-code:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v4
+
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: '10.0.x'
+
+      - name: Restore dependencies
+        run: dotnet restore CommsSender.sln
+        
+      - name: Check C# formatting
+        run: dotnet format --verify-no-changes
