@@ -1,0 +1,50 @@
+# Runs on every pull request (including Renovate's) and on pushes to main.
+# Renovate only auto-merges an update once every job here passes.
+name: CI
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+jobs:
+  service:
+    name: .NET service (format, build)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-dotnet@v6
+        with:
+          dotnet-version: '10.0.x'
+      - run: dotnet restore CommsSender.sln
+      - name: Check formatting
+        run: dotnet format CommsSender.sln --verify-no-changes --no-restore
+      - run: dotnet build CommsSender.sln --no-restore -c Release
+
+  app:
+    name: Expo app (type-check, SDK versions)
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: comms-sender
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-node@v7
+        with:
+          node-version: 24
+          cache: npm
+          cache-dependency-path: comms-sender/package-lock.json
+      - run: npm ci
+      - run: npx tsc --noEmit
+      - name: Check packages match the Expo SDK
+        # Advisory only: flags when the app is behind its Expo SDK's expected versions.
+        # Renovate leaves Expo packages alone, so fix with `npx expo install --fix` and test on a device.
+        continue-on-error: true
+        run: npx expo install --check

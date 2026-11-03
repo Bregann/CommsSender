@@ -41,7 +41,7 @@ namespace CommsSender.Domain.Helpers
 
             var response = await httpClient.SendAsync(request);
             response.EnsureSuccessStatusCode();
-            
+
             var result = await response.Content.ReadAsStreamAsync();
             var ticket = await JsonSerializer.DeserializeAsync<ExpoPushTicketResponse>(result, JsonOptions)
                 ?? throw new InvalidOperationException("Failed to deserialize response");
