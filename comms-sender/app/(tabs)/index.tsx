@@ -3,6 +3,7 @@ import { StyleSheet, ScrollView, Platform, View, Text, Button, Alert } from 'rea
 import Constants from 'expo-constants';
 import * as Device from 'expo-device';
 import * as Notifications from 'expo-notifications';
+import { AndroidImportance } from 'expo-notifications';
 import { registerPushToken } from '@/config/api';
 
 Notifications.setNotificationHandler({
@@ -28,7 +29,7 @@ export default function HomeScreen() {
     if (Platform.OS === 'android') {
       await Notifications.setNotificationChannelAsync('default', {
         name: 'default',
-        importance: Notifications.AndroidImportance.MAX,
+        importance: AndroidImportance.MAX,
         vibrationPattern: [0, 250, 250, 250],
         lightColor: '#FF231F7C',
       });
