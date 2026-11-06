@@ -32,6 +32,9 @@ jobs:
   release:
     runs-on: [self-hosted, Windows]
     timeout-minutes: 60
+    env:
+      # Baked into the JS bundle at build time (it is in .env locally, which is gitignored).
+      EXPO_PUBLIC_API_KEY: ${{ secrets.EXPO_PUBLIC_API_KEY }}
     defaults:
       run:
         shell: powershell
@@ -56,6 +59,13 @@ jobs:
             exit 1
           }
           Write-Output "Android SDK: $sdk"
+
+      - name: Check the API key secret is set
+        run: |
+          if (-not $env:EXPO_PUBLIC_API_KEY) {
+            Write-Output "::error::Add the EXPO_PUBLIC_API_KEY repository secret (the value from comms-sender/.env), or push token registration will fail in the app."
+            exit 1
+          }
 
       - run: npm ci
 
