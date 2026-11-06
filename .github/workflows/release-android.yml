@@ -33,7 +33,7 @@ jobs:
     runs-on: [self-hosted, Windows]
     timeout-minutes: 60
     env:
-      # Baked into the JS bundle at build time (it is in .env locally, which is gitignored).
+      # The APP key (push-token registration only). Baked into the JS bundle, so it is readable from the APK.
       EXPO_PUBLIC_API_KEY: ${{ secrets.EXPO_PUBLIC_API_KEY }}
     defaults:
       run:
@@ -63,7 +63,7 @@ jobs:
       - name: Check the API key secret is set
         run: |
           if (-not $env:EXPO_PUBLIC_API_KEY) {
-            Write-Output "::error::Add the EXPO_PUBLIC_API_KEY repository secret (the value from comms-sender/.env), or push token registration will fail in the app."
+            Write-Output "::error::Add the EXPO_PUBLIC_API_KEY repository secret: the APP key (CommsSenderAppApiKey on the API), never the server key. Without it, push token registration fails in the app."
             exit 1
           }
 
