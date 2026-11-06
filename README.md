@@ -104,14 +104,11 @@ A comprehensive communication platform for sending push notifications and Telegr
    xxxConnString="Host=your-host;Database=commssender;Username=user;Password=pass"
    ```
 
-3. **Configure API Key**
+3. **Configure API Keys**
    
-   Update `appsettings.json`:
-   ```json
-   {
-     "CommsSenderApiKey": "your-secure-api-key-here"
-   }
-   ```
+   Set two environment variables on the API container. Clients send the key in the `X-CommsSender-ApiKey` header.
+   - `CommsSenderApiKey`: the **server key**, with full access. Your other services use it via `CommsSenderClient`. Never put it in the mobile app.
+   - `CommsSenderAppApiKey`: the **app key**, which can **only** call `/api/PushToken/RegisterPushToken`. It is built into the mobile app as `EXPO_PUBLIC_API_KEY`, so treat it as public.
 
 4. **Configure Telegram Bot**
    
@@ -228,7 +225,7 @@ The system uses a database-driven configuration system. Key settings include:
 - `TelegramChatId` - Default Telegram chat ID
 - `HangfireUsername` - Hangfire dashboard credentials
 - `HangfirePassword` - Hangfire dashboard credentials
-- `CommsSenderApiKey` - API authentication key
+- `CommsSenderApiKey` - Server API key used by `CommsSenderClient` (the API itself reads `CommsSenderApiKey` and `CommsSenderAppApiKey` from environment variables)
 
 These can be managed through the `EnvironmentalSettings` table or via the `IEnvironmentalSettingHelper` service.
 
