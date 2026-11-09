@@ -33,6 +33,7 @@ builder.Services.AddHttpContextAccessor();
 // Add in our own services
 builder.Services.AddSingleton<IEnvironmentalSettingHelper, EnvironmentalSettingHelper>();
 builder.Services.AddHttpClient<IExpoPushNotificationHelper, ExpoPushNotificationHelper>();
+builder.Services.AddHttpClient<IProjectMonitorClient, ProjectMonitorClient>(c => c.Timeout = TimeSpan.FromSeconds(10));
 builder.Services.AddScoped<IMessageService, MessageService>();
 builder.Services.AddScoped<IPushNotificationService, PushNotificationService>();
 
@@ -153,6 +154,8 @@ app.MapHangfireDashboard("/hangfire", new DashboardOptions
 }, JobStorage.Current);
 
 // Register recurring Hangfire jobs
+RecurringJob.AddOrUpdate<IProjectMonitorClient>("ProjectMonitorHeartbeat", client => client.SendHeartbeat(), Cron.Minutely);
+
 RecurringJob.AddOrUpdate<IMessageService>(
     "process-pending-messages",
     service => service.ProcessPendingMessages(),
