@@ -80,6 +80,16 @@
       "automerge": false
     },
     {
+      "description": "Expo app: hold eslint on 9.x. eslint-config-expo's plugins (eslint-plugin-react, eslint-plugin-import) don't support eslint 10 yet; drop this rule once they do.",
+      "matchFileNames": [
+        "comms-sender/**"
+      ],
+      "matchPackageNames": [
+        "eslint"
+      ],
+      "allowedVersions": "<10"
+    },
+    {
       "description": "Expo app: SDK-managed packages are listed on the Dependency Dashboard but get no PR unless you tick them. Prefer `npx expo install --fix` (see the expo-updates issue).",
       "matchFileNames": [
         "comms-sender/**"
