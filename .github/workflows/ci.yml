@@ -29,7 +29,7 @@ jobs:
       - run: dotnet build CommsSender.sln --no-restore -c Release
 
   app:
-    name: Expo app (type-check, SDK versions)
+    name: Expo app (lint, type-check, SDK versions)
     runs-on: ubuntu-latest
     defaults:
       run:
@@ -42,6 +42,8 @@ jobs:
           cache: npm
           cache-dependency-path: comms-sender/package-lock.json
       - run: npm ci
+      - name: Lint (errors or warnings fail the build)
+        run: npm run lint -- --max-warnings 0
       - run: npx tsc --noEmit
       - name: Check packages match the Expo SDK
         # Advisory only: flags when the app is behind its Expo SDK's expected versions.
